@@ -36,6 +36,7 @@ export default class InputInfoComponent extends Component {
           cause: this.state.causeSpend,
           timestamp: '' + new Date(),
           status: true,
+          dsid: this.props.dsid.dsid,
         };
 
         console.log(info);

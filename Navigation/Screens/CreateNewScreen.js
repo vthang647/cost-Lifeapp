@@ -17,40 +17,51 @@ import InputInfoComponent from '../../Components/InputInfoComponent';
 import styles from '../../Styles/AddNewStyle';
 
 // REalm database query
-import QueryRealmDatabase from '../../Models/QueryRealmDatabase';
-import {Children} from 'react/cjs/react.production.min';
+import QueryRealmDatabaseSpend from '../../Models/QueryRealmDatabaseSpend';
+import QueryRealmDatabaseEarn from '../../Models/QueryRealmDatabaseEarn';
+import QueryRetriveDay from '../../Models/QueryRetriveDay';
+
+//loading component
+import LoadingComponent from '../../Components/LoadingComponent';
+
+// uuid
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 export default class CreateNewScreen extends Component {
   constructor(props) {
     super(props);
-    this.db = new QueryRealmDatabase();
+    this.dbDaySpending = new QueryRetriveDay();
+    this.dbSpend = new QueryRealmDatabaseSpend();
+    this.dbEarn = new QueryRealmDatabaseEarn();
     this.state = {
       labelMoneySpend: 'Money Spend',
       labelMoneyEarn: 'Money Earn',
-      dataTableSpend: [
-        {
-          cause: 'Nếu biết',
-          id: '4fbf1a0d-3952-4f0b-8ab1-1c897956efa2',
-          money: '$ 8',
-          status: true,
-          timestamp: 'Tue May 31 2022 10:21:33 GMT+0700 (ICT)',
-        },
-      ],
+      dataTableSpend: [],
       dataTableEarn: [],
+      loading: false,
+      dayCreated: false,
+      daySpending: null,
     };
+    this.getInsertDaySpending();
+    this.preLsSpendCost();
+    this.preLsEarnCost();
   }
 
+  setLoading(val) {
+    this.setState({loading: val});
+  }
+  // ------------------------Spend------vv-----------------
+  // ------------------------Spend---v--vv--v--------------
+  // ------------------------Spend-----vvvv----------------
   handleButtonAddSpend = info => {
-    let Spend = {
-      id: info.id,
-      moneySpend: info.money,
-      cause: info.cause,
-      timestamp: info.timestamp,
-      status: info.status,
-    };
-    console.log('-----------------Spend-----------------');
-    this.db.insert(Spend);
-    this.db
+    this.dbSpend.insert(info);
+    this.preLsSpendCost();
+    console.log('-----------', this.state.dataTableSpend, '-----------------');
+  };
+
+  preLsSpendCost = () => {
+    this.dbSpend
       .getDetailsToday()
       .then(res => {
         this.setState({dataTableSpend: [...res]});
@@ -60,28 +71,99 @@ export default class CreateNewScreen extends Component {
       });
   };
 
-  handleButtonDeleteSpend = id => {
-    this.db.delete(id);
+  handleButtonDeleteSpend = (index, id) => {
+    this.setLoading(true);
+
+    this.dbSpend
+      .delete(id)
+      .then(res => {
+        console.log('hahahahhah: ', res);
+        this.setLoading(false);
+      })
+      .catch(rej => {
+        console.log('er r r de lete');
+      });
+    this.preLsSpendCost();
+  };
+  // -----------------^^^^-----Spend-------------------------
+  // --------------------==--Spend-------------------------
+  // --------------------==--Spend-------------------------
+
+  // --------------EARN-----v----------------
+  preLsEarnCost = () => {
+    this.dbEarn
+      .getDetailsToday()
+      .then(res => {
+        this.setState({dataTableEarn: [...res]});
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   handleButtonAddEarn = info => {
-    // this.db
-    //   .getDetailsToday()
-    //   .then(res => {
-    //     this.setState({dataTableEarn: [...res]});
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    this.dbEarn.insert(info);
+    this.preLsEarnCost();
   };
-  handleButtonSave = () => {};
+
+  handleButtonDeleteEarn = (index, id) => {
+    this.setLoading(true);
+
+    this.dbEarn
+      .delete(id)
+      .then(res => {
+        this.setLoading(false);
+      })
+      .catch(rej => {
+        console.log('er r r de lete');
+      });
+    this.preLsEarnCost();
+  };
+  // -----------------^-------EARN-------------------------
+  // handleButtonSave = () => {};
+
+  // Retrive Queryday
+  insertDaySpending() {
+    let daySpend = {
+      id: uuidv4(),
+      timestamp: '' + new Date(),
+      status: true,
+    };
+    try {
+      this.dbDaySpending.insert(daySpend);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getInsertDaySpending() {
+    this.dbDaySpending.getDetailsToday().then(res => {
+      if (res != null) {
+        console.log('1111111111');
+        this.setState({daySpending: res});
+      } else if (res == null) {
+        console.log('22222222222');
+        this.insertDaySpending();
+        let daySpend = {
+          id: uuidv4(),
+          timestamp: '' + new Date(),
+          status: true,
+        };
+        this.setState({daySpending: daySpend});
+      } else {
+        console.log('selectDaySpending error');
+      }
+    });
+  }
+
   render() {
     return (
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true}>
           <View style={styles.container}>
             <InputInfoComponent
               handleButtonAdd={this.handleButtonAddSpend}
+              dsid={this.state.daySpending}
               resetStatus={this.resetStatus}
               labelMoney={this.state.labelMoneySpend}
             />
@@ -91,9 +173,11 @@ export default class CreateNewScreen extends Component {
               handleButtonDelete={this.handleButtonDeleteSpend}
             />
           </View>
+
           <View style={styles.container}>
             <InputInfoComponent
               handleButtonAdd={this.handleButtonAddEarn}
+              dsid={this.state.daySpending}
               resetStatus={this.resetStatus}
               labelMoney={this.state.labelMoneyEarn}
             />
@@ -112,6 +196,7 @@ export default class CreateNewScreen extends Component {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>
     );
   }

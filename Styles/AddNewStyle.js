@@ -13,19 +13,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
+    borderEndWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
   col2: {
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
+    borderEndWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
   col3: {
     flex: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
+    borderEndWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
 
   header: {

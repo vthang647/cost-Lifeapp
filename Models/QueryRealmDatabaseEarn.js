@@ -1,10 +1,8 @@
 import {openDatabase} from 'react-native-sqlite-storage';
-import React, {Component} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const db = openDatabase({name: 'SpendDatabase.db'});
+const db = openDatabase({name: 'CostDatabase.db'});
 
-export default class QueryRealmDatabase {
+export default class QueryRealmDatabaseEarn {
   constructor() {
     this.init();
   }
@@ -13,12 +11,12 @@ export default class QueryRealmDatabase {
     db.transaction(
       tx => {
         tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS spend_table(id VARCHAR(100), moneySpend DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN)',
+          'CREATE TABLE IF NOT EXISTS earn_cost(id VARCHAR(100) PRIMARY KEY, money DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN, dsid VARCHAR(100), FOREIGN KEY (dsid) REFERENCES day_spending(dsid))',
         );
       },
       [],
       function (tx, res) {
-        console.log('Create table if not exists');
+        console.log('Earn: Create table if not exists');
       },
       function () {
         console.log('not Create table if not exists');
@@ -48,7 +46,7 @@ export default class QueryRealmDatabase {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
-          'SELECT * FROM spend_table',
+          'SELECT * FROM earn_cost',
           [],
           function (tx, res) {
             console.log('result: ', res.rows.item(res.rows.length - 1));
@@ -58,9 +56,9 @@ export default class QueryRealmDatabase {
             }
             resolve(temp);
             if (res.rows.length == 0) {
-              txn.executeSql('DROP TABLE IF EXISTS spend_table', []);
+              txn.executeSql('DROP TABLE IF EXISTS earn_cost', []);
               txn.executeSql(
-                'CREATE TABLE IF NOT EXISTS spend_table(id VARCHAR(100), moneySpend DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN)',
+                'CREATE TABLE IF NOT EXISTS earn_cost(id VARCHAR(100) PRIMARY KEY, money DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN)',
                 [],
               );
             }
@@ -77,7 +75,7 @@ export default class QueryRealmDatabase {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
-          'SELECT * FROM spend_table where timestamp like ?',
+          'SELECT * FROM earn_cost where timestamp like ?',
           [today + '%'],
           function (tx, res) {
             console.log('result earn: ', res.rows.length);
@@ -98,13 +96,14 @@ export default class QueryRealmDatabase {
   insert(spend_object) {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO spend_table (id, moneySpend, cause, timestamp, status) VALUES (?,?,?,?,?)',
+        'INSERT INTO earn_cost (id, money, cause, timestamp, status, dsid) VALUES (?,?,?,?,?,?)',
         [
           spend_object.id,
-          spend_object.moneySpend,
+          spend_object.money,
           spend_object.cause,
           spend_object.timestamp,
           spend_object.status,
+          spend_object.dsid,
         ],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
@@ -129,9 +128,9 @@ export default class QueryRealmDatabase {
   update(spend_object) {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE spend_table set moneySpend=?, cause=?, timestamp=?, status=? where id=?',
+        'UPDATE earn_cost set money=?, cause=?, timestamp=?, status=? where id=?',
         [
-          spend_object.moneySpend,
+          spend_object.money,
           spend_object.cause,
           spend_object.timestamp,
           spend_object.status,
@@ -157,30 +156,23 @@ export default class QueryRealmDatabase {
     });
   }
 
-  delete() {
-    db.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM  spend_table where id=?',
-        [inputUserId],
-        (tx, results) => {
-          console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'User deleted successfully',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
-                },
-              ],
-              {cancelable: false},
-            );
-          } else {
-            alert('Please insert a valid User Id');
-          }
-        },
-      );
+  delete(id) {
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'DELETE FROM  earn_cost where id=?',
+          [id],
+          (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              resolve(results.rowsAffected);
+              console.log('Delete successfully');
+            } else {
+              console.log('Please insert a valid User Id');
+            }
+          },
+        );
+      });
     });
   }
 }
