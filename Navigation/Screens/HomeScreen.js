@@ -10,8 +10,8 @@ import {
 // component
 import DashBoardItem from '../../Components/DashBoardItem';
 
-// database
-// import HomeRetriveDatabase from '../../Models/HomeRetriveDatabase';
+//database
+import QueryRetriveDay from '../../Models/QueryRetriveDay';
 
 //loading
 import LoadingComponent from '../../Components/LoadingComponent';
@@ -20,26 +20,39 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
 
+    this.dbDay = new QueryRetriveDay();
+
     this.state = {
       loading: false,
+      data: [],
     };
+    this.selectAllDataDaySpending();
+  }
+
+  selectAllDataDaySpending() {
+    this.dbDay
+      .selectAll()
+      .then(res => {
+        this.setState({data: [...res]});
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    console.log(this.state.data);
   }
 
   render() {
     return (
-      <SafeAreaView
-        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        {/* <FlatList
-          data={data}
-          renderItem={DashBoardItem}
+      <SafeAreaView>
+        <FlatList
+          data={this.state.data}
+          renderItem={item => {
+            return (
+              <DashBoardItem navigation={this.props.navigation} item={item} />
+            );
+          }}
           keyExtractor={item => item.id}
-          extraData={selectedId}
-        /> */}
-        <TouchableOpacity
-          onPress={this.testClick}
-          style={{width: 100, height: 50, backgroundColor: 'tomato'}}>
-          <Text>hello</Text>
-        </TouchableOpacity>
+        />
         {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>
     );

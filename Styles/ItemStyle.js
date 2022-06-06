@@ -3,9 +3,12 @@ import {StyleSheet} from 'react-native';
 const ItemStyle = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 3,
+    margin: 9,
   },
   headerItem: {
     flex: 3,

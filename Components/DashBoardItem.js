@@ -1,23 +1,34 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 
+// style
 import ItemStyle from '../Styles/ItemStyle';
 
+// utils
+import DashBoardItemUtil from '../Utils/DashBoardItemUtil';
+
 export default class DashBoardItem extends Component {
-  state = {};
   render() {
+    let {item} = this.props.item;
     return (
-      <View style={ItemStyle.container}>
+      <TouchableOpacity
+        style={ItemStyle.container}
+        onPress={() => {
+          console.log('item.id : ', item.dsid);
+          this.props.navigation.navigate('DetailsThatDay', {obj: item.dsid});
+        }}>
         <View style={ItemStyle.headerItem}>
-          <Text style={ItemStyle.textHeader}>Day 1</Text>
+          <Text style={ItemStyle.textHeader}>
+            {DashBoardItemUtil.refreshHeader(item.timestamp)}{' '}
+          </Text>
         </View>
         <View style={ItemStyle.bodyItem}>
-          <Text>Day month year hours minute</Text>
+          <Text>{item.timestamp}</Text>
         </View>
         <View style={ItemStyle.footerItem}>
-          <Text>Spend: 10000, Earn: 2000</Text>
+          <Text>{item.status == 1 ? 'active' : 'inactive'}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

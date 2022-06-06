@@ -44,6 +44,7 @@ export default class CreateNewScreen extends Component {
       daySpending: null,
     };
     this.getInsertDaySpending();
+    this.selectDaySpending();
     this.preLsSpendCost();
     this.preLsEarnCost();
   }
@@ -57,7 +58,6 @@ export default class CreateNewScreen extends Component {
   handleButtonAddSpend = info => {
     this.dbSpend.insert(info);
     this.preLsSpendCost();
-    console.log('-----------', this.state.dataTableSpend, '-----------------');
   };
 
   preLsSpendCost = () => {
@@ -77,7 +77,6 @@ export default class CreateNewScreen extends Component {
     this.dbSpend
       .delete(id)
       .then(res => {
-        console.log('hahahahhah: ', res);
         this.setLoading(false);
       })
       .catch(rej => {
@@ -125,7 +124,7 @@ export default class CreateNewScreen extends Component {
   // Retrive Queryday
   insertDaySpending() {
     let daySpend = {
-      id: uuidv4(),
+      dsid: uuidv4(),
       timestamp: '' + new Date(),
       status: true,
     };
@@ -145,7 +144,7 @@ export default class CreateNewScreen extends Component {
         console.log('22222222222');
         this.insertDaySpending();
         let daySpend = {
-          id: uuidv4(),
+          dsid: uuidv4(),
           timestamp: '' + new Date(),
           status: true,
         };
@@ -155,6 +154,18 @@ export default class CreateNewScreen extends Component {
       }
     });
   }
+
+  selectDaySpending() {
+    this.dbDaySpending
+      .getDetails()
+      .then(res => {
+        console.log('select all day: ', res);
+      })
+      .catch(err => {
+        console.log('select all day: ', err);
+      });
+  }
+  // selected day spending
 
   render() {
     return (

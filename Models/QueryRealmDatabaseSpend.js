@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostDatabase.db'});
+const db = openDatabase({name: 'CostLifeDatabase.db'});
 
 export default class QueryRealmDatabaseSpend {
   constructor() {
@@ -74,6 +74,29 @@ export default class QueryRealmDatabaseSpend {
             for (let i = 0; i < res.rows.length; ++i) {
               temp.push(res.rows.item(i));
             }
+            console.log('test ... ', temp);
+            resolve(temp);
+          },
+          function (error) {
+            console.log('get today SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
+  selectAllWithdsid(dsid) {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT * FROM spend_cost where dsid like ?',
+          [dsid],
+          function (tx, res) {
+            console.log('result earn: ', res.rows.length);
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
             resolve(temp);
           },
           function (error) {
@@ -98,18 +121,11 @@ export default class QueryRealmDatabaseSpend {
         ],
         (tx, results) => {
           if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'You are Add new Successfully',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
-                },
-              ],
-              {cancelable: false},
-            );
-          } else alert('Add Failed');
+            console.log('insert spend data succesfully');
+          } else console.log('Add Failed');
+        },
+        err => {
+          console.log(err);
         },
       );
     });

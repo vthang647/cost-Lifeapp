@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostDatabase.db'});
+const db = openDatabase({name: 'CostLifeDatabase.db'});
 
 export default class QueryRealmDatabaseEarn {
   constructor() {
@@ -55,13 +55,6 @@ export default class QueryRealmDatabaseEarn {
               temp.push(res.rows.item(i));
             }
             resolve(temp);
-            if (res.rows.length == 0) {
-              txn.executeSql('DROP TABLE IF EXISTS earn_cost', []);
-              txn.executeSql(
-                'CREATE TABLE IF NOT EXISTS earn_cost(id VARCHAR(100) PRIMARY KEY, money DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN)',
-                [],
-              );
-            }
           },
           function (error) {
             console.log('get SElectAll failure!', error);
@@ -77,6 +70,28 @@ export default class QueryRealmDatabaseEarn {
         txn.executeSql(
           'SELECT * FROM earn_cost where timestamp like ?',
           [today + '%'],
+          function (tx, res) {
+            console.log('result earn: ', res.rows.length);
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            console.log('get today SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
+  selectAllWithdsid(dsid) {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT * FROM earn_cost where dsid like ?',
+          [dsid],
           function (tx, res) {
             console.log('result earn: ', res.rows.length);
             var temp = [];

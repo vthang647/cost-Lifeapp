@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostDatabase.db'});
+const db = openDatabase({name: 'CostLifeDatabase.db'});
 
 export default class QueryRetriveDay {
   constructor() {
@@ -16,7 +16,7 @@ export default class QueryRetriveDay {
       },
       [],
       function (tx, res) {
-        console.log('Earn: Create table if not exists');
+        console.log('RetriveDay: Create table if not exists');
       },
       function () {
         console.log('not Create table if not exists');
@@ -85,15 +85,18 @@ export default class QueryRetriveDay {
     });
   }
 
-  insert(spend_object) {
+  insert(preday_object) {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO day_spending (id, timestamp, status) VALUES (?,?,?)',
-        [spend_object.id, spend_object.timestamp, spend_object.status],
+        'INSERT INTO day_spending (dsid, timestamp, status) VALUES (?,?,?)',
+        [preday_object.dsid, preday_object.timestamp, preday_object.status],
         (tx, results) => {
           if (results.rowsAffected > 0) {
             console.log('insert day_spending ok');
-          } else console.log('Add Failed');
+          } else console.log('nsert day_spending Failed');
+        },
+        err => {
+          console.log(err);
         },
       );
     });
