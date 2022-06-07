@@ -26,14 +26,18 @@ export default class HomeScreen extends Component {
       loading: false,
       data: [],
     };
+  }
+
+  componentDidMount() {
     this.selectAllDataDaySpending();
   }
 
   selectAllDataDaySpending() {
+    this.setState({loading: true});
     this.dbDay
       .selectAll()
       .then(res => {
-        this.setState({data: [...res]});
+        this.setState({data: [...res], loading: false});
       })
       .catch(err => {
         console.log(err);

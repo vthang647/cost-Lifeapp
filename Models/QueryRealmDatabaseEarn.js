@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostLifeDatabase.db'});
+const db = openDatabase({name: 'CostLifeDatabase1.db'});
 
 export default class QueryRealmDatabaseEarn {
   constructor() {
@@ -11,7 +11,7 @@ export default class QueryRealmDatabaseEarn {
     db.transaction(
       tx => {
         tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS earn_cost(id VARCHAR(100) PRIMARY KEY, money DOUBLE(20), cause INT(10), timestamp VARCHAR(100), status BOOLEAN, dsid VARCHAR(100), FOREIGN KEY (dsid) REFERENCES day_spending(dsid))',
+          'CREATE TABLE IF NOT EXISTS earn_cost(id VARCHAR(100) PRIMARY KEY, money DOUBLE(20), cause TEXT, timestamp VARCHAR(100), status BOOLEAN, dsid VARCHAR(100), FOREIGN KEY (dsid) REFERENCES day_spending(dsid))',
         );
       },
       [],
@@ -37,6 +37,23 @@ export default class QueryRealmDatabaseEarn {
       let day = new Date();
       let today = new String(day).substring(0, 15);
       return await this.selectAllToday(today);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getselectAllWithdsid(id) {
+    try {
+      return await this.selectAllWithdsid(id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getselectSumDsid(id) {
+    try {
+      console.log('idddddddddddddddddddddddddddddd', id);
+      return await this.selectSumMoneyPerDay(id);
     } catch (e) {
       console.log(e);
     }
@@ -86,14 +103,35 @@ export default class QueryRealmDatabaseEarn {
     });
   }
 
+  selectSumMoneyPerDay(dsid) {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT dsid, SUM(money) as sum FROM earn_cost where dsid=? GROUP BY dsid',
+          [dsid],
+          function (tx, res) {
+            console.log('result earn: ', res.rows.length);
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            console.log('get today SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
   selectAllWithdsid(dsid) {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
-          'SELECT * FROM earn_cost where dsid like ?',
+          'SELECT * FROM earn_cost where dsid=?',
           [dsid],
           function (tx, res) {
-            console.log('result earn: ', res.rows.length);
             var temp = [];
             for (let i = 0; i < res.rows.length; ++i) {
               temp.push(res.rows.item(i));

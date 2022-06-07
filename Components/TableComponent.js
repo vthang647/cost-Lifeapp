@@ -7,14 +7,13 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
 
 export default class TableComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       numCol: this.props.numCol,
-      arrStyleObjectColum: this.props.arrStyleObject, // {title: [], style:[{}]}
+      // {title: [], style:[{}]}
     };
   }
 
@@ -36,10 +35,14 @@ export default class TableComponent extends Component {
 
   render() {
     let dataTable = this.props.dataTable;
+    let arrStyleObject = this.props.arrStyleObject;
+    let styleContents = this.props.styleContents;
     return (
-      <ScrollView nestedScrollEnabled={true}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        style={{marginLeft: 9, marginRight: 3}}>
         <View style={styles.header}>
-          {this.state.arrStyleObjectColum.map((item, index) => {
+          {arrStyleObject.map((item, index) => {
             return (
               <View style={item.style}>
                 <Text style={{fontWeight: 'bold'}}>{item.title}</Text>
@@ -47,24 +50,19 @@ export default class TableComponent extends Component {
             );
           })}
         </View>
+
         {dataTable.map((item, index) => {
           return (
-            <View key={item.id} style={styles.row1}>
-              <TouchableOpacity
-                style={styles.row1}
-                onPress={index => {
-                  this.handleDeleteInRow(index, item.id);
-                }}>
-                <View style={styles.col1}>
-                  <Text style={{fontWeight: 'bold'}}>{index + 1}</Text>
-                </View>
-                <View style={styles.col2}>
-                  <Text style={{fontWeight: 'bold'}}>{item.money}</Text>
-                </View>
-                <View style={styles.col3}>
-                  <Text style={{fontWeight: 'bold'}}>{item.cause}</Text>
-                </View>
-              </TouchableOpacity>
+            <View style={styles.header}>
+              <View style={styleContents[0]}>
+                <Text>{item.cause}</Text>
+              </View>
+              <View style={styleContents[1]}>
+                <Text>$ {item.money}</Text>
+              </View>
+              <View style={styleContents[2]}>
+                <Text>{item.timestamp}</Text>
+              </View>
             </View>
           );
         })}
@@ -77,7 +75,9 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     flexDirection: 'row',
-    height: 50,
-    backgroundColor: '#dddddd',
+  },
+  header1: {
+    flex: 1,
+    flexDirection: 'column',
   },
 });

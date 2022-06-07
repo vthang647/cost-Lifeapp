@@ -30,9 +30,11 @@ export default class InputInfoComponent extends Component {
     if (Helpers.validateEmptyCauses(this.state.causeSpend)) {
       if (Helpers.validateEmptyMoney(this.state.initMoneySpend)) {
         this.setState({isPassCause: true, isPassMoney: true});
-        let info = {
+        let monneyFilter = Helpers.getMoney(this.state.initMoneySpend);
+        console.log('money filter: ', this.props.dsid.dsid);
+        const info = {
           id: uuidv4(),
-          money: this.state.initMoneySpend,
+          money: monneyFilter,
           cause: this.state.causeSpend,
           timestamp: '' + new Date(),
           status: true,

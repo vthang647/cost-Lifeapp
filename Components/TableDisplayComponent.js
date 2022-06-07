@@ -54,7 +54,7 @@ export default class TableDisplayComponent extends Component {
                   <Text style={{fontWeight: 'bold'}}>{index + 1}</Text>
                 </View>
                 <View style={styles.col2}>
-                  <Text style={{fontWeight: 'bold'}}>{item.money}</Text>
+                  <Text style={{fontWeight: 'bold'}}>$ {item.money}</Text>
                 </View>
                 <View style={styles.col3}>
                   <Text style={{fontWeight: 'bold'}}>{item.cause}</Text>

@@ -10,6 +10,10 @@ const Helpers = {
   validateEmptyCauses: function (cause) {
     return String(cause).trim() === '' ? false : true;
   },
+  getMoney: function (money) {
+    let res = String(money).replace('$', '').trim();
+    return String(res).replace('.', '');
+  },
 };
 
 export default Helpers;
