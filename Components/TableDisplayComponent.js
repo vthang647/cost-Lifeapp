@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import {ScrollView as GestureHandlerScrollView} from 'react-native-gesture-handler';
 import styles from '../Styles/AddNewStyle';
+import Helpers from '../Utils/Helpers';
 
 export default class TableDisplayComponent extends Component {
   constructor(props) {
@@ -54,7 +55,9 @@ export default class TableDisplayComponent extends Component {
                   <Text style={{fontWeight: 'bold'}}>{index + 1}</Text>
                 </View>
                 <View style={styles.col2}>
-                  <Text style={{fontWeight: 'bold'}}>$ {item.money}</Text>
+                  <Text style={{fontWeight: 'bold'}}>
+                    $ {Helpers.setMoney(item.money)}
+                  </Text>
                 </View>
                 <View style={styles.col3}>
                   <Text style={{fontWeight: 'bold'}}>{item.cause}</Text>

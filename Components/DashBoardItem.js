@@ -18,9 +18,7 @@ export default class DashBoardItem extends Component {
           this.props.navigation.navigate('DetailsThatDay', {obj: item.dsid});
         }}>
         <View style={ItemStyle.headerItem}>
-          <Text style={ItemStyle.textHeader}>
-            {DashBoardItemUtil.refreshHeader(item.timestamp)}{' '}
-          </Text>
+          <Text style={ItemStyle.textHeader}>{item.timestamp}</Text>
         </View>
         <View style={ItemStyle.bodyItem}>
           <Text>{item.timestamp}</Text>

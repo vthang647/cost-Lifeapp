@@ -21,10 +21,15 @@ const Drawer = createDrawerNavigator();
 function DrawRoutes() {
   return (
     <Drawer.Navigator screenOptions={{}}>
-      <Drawer.Screen component={TabRoutes} name={NavigationString.HOME} />
+      <Drawer.Screen
+        component={TabRoutes}
+        name="HOME"
+        options={{headerShown: false}}
+      />
       <Drawer.Screen
         component={SettingsScreen}
         name={NavigationString.SETTINGS}
+        options={{headerShown: true}}
       />
     </Drawer.Navigator>
   );

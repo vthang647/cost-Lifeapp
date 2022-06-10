@@ -30,6 +30,22 @@ export default class HomeScreen extends Component {
 
   componentDidMount() {
     this.selectAllDataDaySpending();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'focus',
+      () => {
+        this.updateState();
+      },
+    );
+  }
+
+  updateState() {
+    this.selectAllDataDaySpending();
+    console.log(this.state.data);
+    this.setState({loading: false});
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription();
   }
 
   selectAllDataDaySpending() {
@@ -52,7 +68,11 @@ export default class HomeScreen extends Component {
           data={this.state.data}
           renderItem={item => {
             return (
-              <DashBoardItem navigation={this.props.navigation} item={item} />
+              <DashBoardItem
+                key={item.id}
+                navigation={this.props.navigation}
+                item={item}
+              />
             );
           }}
           keyExtractor={item => item.id}

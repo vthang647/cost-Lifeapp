@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostLifeDatabase1.db'});
+const db = openDatabase({name: 'CostLifeDatabase8.db'});
 
 export default class QueryRealmDatabaseEarn {
   constructor() {
@@ -52,7 +52,6 @@ export default class QueryRealmDatabaseEarn {
 
   async getselectSumDsid(id) {
     try {
-      console.log('idddddddddddddddddddddddddddddd', id);
       return await this.selectSumMoneyPerDay(id);
     } catch (e) {
       console.log(e);
@@ -139,6 +138,7 @@ export default class QueryRealmDatabaseEarn {
             resolve(temp);
           },
           function (error) {
+            reject(error);
             console.log('get today SElectAll failure!', error);
           },
         );

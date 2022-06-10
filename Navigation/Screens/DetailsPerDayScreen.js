@@ -15,6 +15,7 @@ import TableComponent from '../../Components/TableComponent';
 // import database
 import QueryRealmDatabaseSpend from '../../Models/QueryRealmDatabaseSpend';
 import QueryRealmDatabaseEarn from '../../Models/QueryRealmDatabaseEarn';
+import QueryRetriveDay from '../../Models/QueryRetriveDay';
 
 // Loading
 import LoadingComponent from '../../Components/LoadingComponent';
@@ -27,6 +28,7 @@ import DashBoardItemUtil from '../../Utils/DashBoardItemUtil';
 
 // icon
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Helpers from '../../Utils/Helpers';
 
 const bufOS = [
   {
@@ -84,6 +86,7 @@ export default class DetailsPerDayScreen extends Component {
     super(props);
     this.dbE = new QueryRealmDatabaseEarn();
     this.dbS = new QueryRealmDatabaseSpend();
+    this.dbD = new QueryRetriveDay();
     this.state = {
       tableSpend: [],
       tableEarn: [],
@@ -97,6 +100,7 @@ export default class DetailsPerDayScreen extends Component {
   }
 
   componentDidMount() {
+    this.selectPreDay();
     this.selectEarnTable();
     this.selectSpendTable();
     this.selectSumMoneyEarnPerDay();
@@ -108,7 +112,7 @@ export default class DetailsPerDayScreen extends Component {
     this.dbE
       .getselectAllWithdsid(this.state.dsid)
       .then(res => {
-        this.setState({tableEarn: [...res], thisDay: res[0].timestamp});
+        this.setState({tableEarn: [...res]});
       })
       .catch(err => {
         console.log(err);
@@ -122,7 +126,19 @@ export default class DetailsPerDayScreen extends Component {
         this.setState({sumEarn: res[0].sum});
       })
       .catch(err => {
-        console.log(err);
+        this.setState({sumEarn: 0});
+      });
+  }
+
+  // THISDAY
+  selectPreDay() {
+    this.dbD
+      .getDataWithDsid(this.state.dsid)
+      .then(res => {
+        this.setState({thisDay: res[0].timestamp});
+      })
+      .catch(e => {
+        console.log(e);
       });
   }
 
@@ -136,6 +152,7 @@ export default class DetailsPerDayScreen extends Component {
       .catch(err => {
         console.log(err);
       });
+    console.log('spend table: ', this.state.tableSpend);
   }
 
   selectSumMoneySpendPerDay() {
@@ -145,17 +162,21 @@ export default class DetailsPerDayScreen extends Component {
         this.setState({sumSpend: res[0].sum});
       })
       .catch(err => {
-        console.log(err);
+        this.setState({sumSpend: 0});
       });
   }
+
+  handleButtonEdit = () => {
+    const day = new Date();
+    console.log('date: ,', day);
+    console.log('month: ', day.getMonth());
+  };
 
   render() {
     return (
       <ScrollView style={styles.container}>
         <View style={{marginTop: 18, marginLeft: 3}}>
-          <Text style={styles.title}>
-            Details {DashBoardItemUtil.refreshHeader(this.state.thisDay)}
-          </Text>
+          <Text style={styles.title}>Details{this.state.thisDay}</Text>
         </View>
         <View
           style={{
@@ -197,29 +218,45 @@ export default class DetailsPerDayScreen extends Component {
           <Text style={{fontWeight: 'bold', top: 6}}>EXPENDITURE</Text>
         </View>
 
-        <TableComponent
-          dataTable={this.state.tableEarn}
-          numCol={this.state.numCol}
-          arrStyleObject={bufOS}
-          styleContents={styleCt}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 12,
-            marginLeft: 24,
-            marginBottom: 3,
-          }}>
-          <MaterialIcons
-            size={25}
-            style={{marginRight: 3, top: -3}}
-            name="trending-flat"
-          />
-          <Text style={{fontWeight: 'bold', fontSize: 14}}>
-            Sum Money In: $ {this.state.sumEarn}
-          </Text>
-        </View>
+        {this.state.tableEarn && this.state.tableEarn.length ? (
+          <>
+            <TableComponent
+              dataTable={this.state.tableEarn}
+              numCol={this.state.numCol}
+              arrStyleObject={bufOS}
+              styleContents={styleCt}
+            />
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginTop: 12,
+                marginLeft: 24,
+                marginBottom: 3,
+              }}>
+              <MaterialIcons
+                size={25}
+                style={{marginRight: 3, top: -3}}
+                name="trending-flat"
+              />
+              <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                Sum Money In: $ {this.state.sumEarn}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              margin: 9,
+            }}>
+            <Text>Data is empty</Text>
+          </View>
+        )}
 
         <View
           style={{
@@ -236,29 +273,46 @@ export default class DetailsPerDayScreen extends Component {
           />
           <Text style={{fontWeight: 'bold', top: 6}}>GET MONEY</Text>
         </View>
-        <TableComponent
-          dataTable={this.state.tableSpend}
-          numCol={this.state.numCol}
-          arrStyleObject={bufOS}
-          styleContents={styleCt}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 12,
-            marginLeft: 24,
-            marginBottom: 3,
-          }}>
-          <MaterialIcons
-            size={25}
-            style={{marginRight: 3, top: -3}}
-            name="trending-flat"
-          />
-          <Text style={{fontWeight: 'bold', fontSize: 14}}>
-            Sum Money In: $ {this.state.sumSpend}
-          </Text>
-        </View>
+
+        {this.state.tableSpend && this.state.tableSpend.length ? (
+          <>
+            <TableComponent
+              dataTable={this.state.tableSpend}
+              numCol={this.state.numCol}
+              arrStyleObject={bufOS}
+              styleContents={styleCt}
+            />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginTop: 12,
+                marginLeft: 24,
+                marginBottom: 3,
+              }}>
+              <MaterialIcons
+                size={25}
+                style={{marginRight: 3, top: -3}}
+                name="trending-flat"
+              />
+              <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                Sum Money In: $ {this.state.sumSpend}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              margin: 9,
+            }}>
+            <Text>Data is empty</Text>
+          </View>
+        )}
+
         <View
           style={{
             flex: 1,
@@ -270,7 +324,7 @@ export default class DetailsPerDayScreen extends Component {
           <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#DDDffD"
-            onPress={() => alert('Pressed!')}>
+            onPress={this.handleButtonEdit}>
             <View
               style={{
                 flex: 1,

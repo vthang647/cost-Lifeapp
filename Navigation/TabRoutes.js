@@ -39,16 +39,18 @@ function TabRoutes() {
         },
         tabBarShowLabel: false,
       })}>
-      <Tab.Screen component={HomeScreen} name={NavigationString.HOME} />
+      <Tab.Screen
+        component={HomeScreen}
+        name={NavigationString.HOME}
+        options={{headerShown: true}}
+      />
 
       <Tab.Screen
         component={SettingsScreen}
         name={NavigationString.ADD}
         options={({navigation}) => ({
-          headerShown: false,
-          headerTitle: 'Test',
           tabBarIcon: ({focused, size, color}) => {
-            return <Ionic name="add-circle" size={size + 36} color="tomato" />;
+            return <Ionic name="add-circle" size={size + 36} color="#ff2448" />;
           },
 
           tabBarButton: props => {
@@ -69,7 +71,11 @@ function TabRoutes() {
           },
         })}
       />
-      <Tab.Screen component={DetailsScreen} name={NavigationString.DETAILS} />
+      <Tab.Screen
+        component={DetailsScreen}
+        name={NavigationString.DETAILS}
+        options={{headerShown: true}}
+      />
     </Tab.Navigator>
   );
 }

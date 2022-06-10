@@ -16,9 +16,17 @@ const Stack = createStackNavigator();
 function Routes() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen component={DrawRoutes} name="Home" />
-        <Stack.Screen component={CreateNewScreen} name="Create New" />
+      <Stack.Navigator>
+        <Stack.Screen
+          component={DrawRoutes}
+          name="Home"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={CreateNewScreen}
+          name="Create New"
+          options={{headerShown: true}}
+        />
         <Stack.Screen component={DetailsPerDayScreen} name="DetailsThatDay" />
       </Stack.Navigator>
     </NavigationContainer>

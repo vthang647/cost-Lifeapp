@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 5,
     width: 150,
+    height: 200,
   },
   viewInputDimensionReason: {
     flex: 6,

@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostLifeDatabase1.db'});
+const db = openDatabase({name: 'CostLifeDatabase8.db'});
 
 export default class QueryRetriveDay {
   constructor() {
@@ -11,7 +11,7 @@ export default class QueryRetriveDay {
     db.transaction(
       tx => {
         tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS day_spending(dsid VARCHAR(100) PRIMARY KEY, timestamp VARCHAR(100), status BOOLEAN)',
+          'CREATE TABLE IF NOT EXISTS day_spending(dsid VARCHAR(100) PRIMARY KEY, timestamp VARCHAR(100),Month INT(10), status BOOLEAN)',
         );
       },
       [],
@@ -32,13 +32,27 @@ export default class QueryRetriveDay {
     }
   }
 
-  async getDetailsToday() {
+  async getDetailsToday(today) {
     try {
-      let day = new Date();
-      let today = new String(day).substring(0, 15);
       return await this.iscreatedDay(today);
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async getMonth() {
+    try {
+      return await this.calMonthQuantity();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getDataWithDsid(dsid) {
+    try {
+      return await this.selectDataWithDsid(dsid);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -63,12 +77,55 @@ export default class QueryRetriveDay {
     });
   }
 
+  selectDataWithDsid(dsid) {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT * FROM day_spending where dsid=?',
+          [dsid],
+          function (tx, res) {
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            reject(error);
+            console.log('get SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
+  calMonthQuantity() {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT timestamp, COUNT(dsid) FROM day_spending group by timestamp',
+          [],
+          function (tx, res) {
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            console.log('get SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
   iscreatedDay(today) {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
           'SELECT * FROM day_spending WHERE timestamp like ? ORDER BY timestamp DESC LIMIT 1',
-          [today + '%'],
+          ['%' + today + '%'],
           function (tx, res) {
             if (res.rows.length > 0) {
               console.log('iscreatedDay', res.rows.item(0));
@@ -88,8 +145,13 @@ export default class QueryRetriveDay {
   insert(preday_object) {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO day_spending (dsid, timestamp, status) VALUES (?,?,?)',
-        [preday_object.dsid, preday_object.timestamp, preday_object.status],
+        'INSERT INTO day_spending (dsid, timestamp, Month, status) VALUES (?,?,?,?)',
+        [
+          preday_object.dsid,
+          preday_object.timestamp,
+          preday_object.Month,
+          preday_object.status,
+        ],
         (tx, results) => {
           if (results.rowsAffected > 0) {
             console.log('insert day_spending ok');
@@ -102,11 +164,19 @@ export default class QueryRetriveDay {
     });
   }
 
+  async getDelete(id) {
+    try {
+      return await this.delete(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   delete(id) {
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
-          'DELETE FROM  day_spending where id=?',
+          'DELETE FROM  day_spending where dsid=?',
           [id],
           (tx, results) => {
             console.log('Results', results.rowsAffected);
@@ -116,6 +186,10 @@ export default class QueryRetriveDay {
             } else {
               console.log('Please insert a valid User Id');
             }
+          },
+          err => {
+            reject(err);
+            console.log('err ', err);
           },
         );
       });

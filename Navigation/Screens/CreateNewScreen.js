@@ -28,6 +28,9 @@ import LoadingComponent from '../../Components/LoadingComponent';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
+// utils
+import DashBoardItemUtil from '../../Utils/DashBoardItemUtil';
+
 export default class CreateNewScreen extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +67,7 @@ export default class CreateNewScreen extends Component {
     this.dbSpend
       .getDetailsToday()
       .then(res => {
+        console.log('data table spend: ', res);
         this.setState({dataTableSpend: [...res]});
       })
       .catch(err => {
@@ -123,32 +127,32 @@ export default class CreateNewScreen extends Component {
 
   // Retrive Queryday
   insertDaySpending() {
+    const day = new Date();
+
     let daySpend = {
       dsid: uuidv4(),
-      timestamp: '' + new Date(),
+      timestamp: DashBoardItemUtil.refreshHeader(new Date()),
+      Month: day.getMonth + 1,
       status: true,
     };
+
     try {
       this.dbDaySpending.insert(daySpend);
+      this.setState({daySpending: daySpend});
     } catch (error) {
       console.log(error);
     }
   }
 
   getInsertDaySpending() {
-    this.dbDaySpending.getDetailsToday().then(res => {
+    let today = DashBoardItemUtil.refreshHeader(new Date());
+    this.dbDaySpending.getDetailsToday(today).then(res => {
       if (res != null) {
-        console.log('1111111111');
+        console.log('1111111111', res.dsid);
         this.setState({daySpending: res});
       } else if (res == null) {
         console.log('22222222222');
         this.insertDaySpending();
-        let daySpend = {
-          dsid: uuidv4(),
-          timestamp: '' + new Date(),
-          status: true,
-        };
-        this.setState({daySpending: daySpend});
       } else {
         console.log('selectDaySpending error');
       }

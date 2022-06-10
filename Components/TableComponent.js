@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import Helpers from '../Utils/Helpers';
 
 export default class TableComponent extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ export default class TableComponent extends Component {
         <View style={styles.header}>
           {arrStyleObject.map((item, index) => {
             return (
-              <View style={item.style}>
+              <View key={item.id} style={item.style}>
                 <Text style={{fontWeight: 'bold'}}>{item.title}</Text>
               </View>
             );
@@ -53,12 +54,12 @@ export default class TableComponent extends Component {
 
         {dataTable.map((item, index) => {
           return (
-            <View style={styles.header}>
+            <View key={item.id} style={styles.header}>
               <View style={styleContents[0]}>
                 <Text>{item.cause}</Text>
               </View>
               <View style={styleContents[1]}>
-                <Text>$ {item.money}</Text>
+                <Text>$ {Helpers.setMoney(item.money)}</Text>
               </View>
               <View style={styleContents[2]}>
                 <Text>{item.timestamp}</Text>
