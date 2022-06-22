@@ -32,6 +32,7 @@ import Helpers from '../../Utils/Helpers';
 
 const bufOS = [
   {
+    id: 1,
     title: 'CAUSE',
     style: {
       flex: 5,
@@ -41,6 +42,7 @@ const bufOS = [
     },
   },
   {
+    id: 2,
     title: 'MONEY',
     style: {
       flex: 3,
@@ -50,6 +52,7 @@ const bufOS = [
     },
   },
   {
+    id: 3,
     title: 'TIMESTAMP',
     style: {
       flex: 2,
@@ -166,12 +169,6 @@ export default class DetailsPerDayScreen extends Component {
       });
   }
 
-  handleButtonEdit = () => {
-    const day = new Date();
-    console.log('date: ,', day);
-    console.log('month: ', day.getMonth());
-  };
-
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -218,62 +215,6 @@ export default class DetailsPerDayScreen extends Component {
           <Text style={{fontWeight: 'bold', top: 6}}>EXPENDITURE</Text>
         </View>
 
-        {this.state.tableEarn && this.state.tableEarn.length ? (
-          <>
-            <TableComponent
-              dataTable={this.state.tableEarn}
-              numCol={this.state.numCol}
-              arrStyleObject={bufOS}
-              styleContents={styleCt}
-            />
-
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                marginTop: 12,
-                marginLeft: 24,
-                marginBottom: 3,
-              }}>
-              <MaterialIcons
-                size={25}
-                style={{marginRight: 3, top: -3}}
-                name="trending-flat"
-              />
-              <Text style={{fontWeight: 'bold', fontSize: 14}}>
-                Sum Money In: $ {this.state.sumEarn}
-              </Text>
-            </View>
-          </>
-        ) : (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderWidth: 1,
-              margin: 9,
-            }}>
-            <Text>Data is empty</Text>
-          </View>
-        )}
-
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 12,
-            marginLeft: 6,
-            marginBottom: 3,
-          }}>
-          <MaterialIcons
-            size={25}
-            style={{marginRight: 3}}
-            name="monetization-on"
-          />
-          <Text style={{fontWeight: 'bold', top: 6}}>GET MONEY</Text>
-        </View>
-
         {this.state.tableSpend && this.state.tableSpend.length ? (
           <>
             <TableComponent
@@ -282,6 +223,7 @@ export default class DetailsPerDayScreen extends Component {
               arrStyleObject={bufOS}
               styleContents={styleCt}
             />
+
             <View
               style={{
                 flex: 1,
@@ -316,31 +258,66 @@ export default class DetailsPerDayScreen extends Component {
         <View
           style={{
             flex: 1,
+            flexDirection: 'row',
+            marginTop: 12,
+            marginLeft: 6,
+            marginBottom: 3,
+          }}>
+          <MaterialIcons
+            size={25}
+            style={{marginRight: 3}}
+            name="monetization-on"
+          />
+          <Text style={{fontWeight: 'bold', top: 6}}>GET MONEY</Text>
+        </View>
+
+        {this.state.tableEarn && this.state.tableEarn.length ? (
+          <>
+            <TableComponent
+              dataTable={this.state.tableEarn}
+              numCol={this.state.numCol}
+              arrStyleObject={bufOS}
+              styleContents={styleCt}
+            />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginTop: 12,
+                marginLeft: 24,
+                marginBottom: 3,
+              }}>
+              <MaterialIcons
+                size={25}
+                style={{marginRight: 3, top: -3}}
+                name="trending-flat"
+              />
+              <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                Sum Money In: $ {this.state.sumEarn}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              margin: 9,
+            }}>
+            <Text>Data is empty</Text>
+          </View>
+        )}
+
+        <View
+          style={{
+            flex: 1,
             justifyContent: 'center',
             alignItems: 'flex-end',
             marginRight: 56,
             marginBottom: 28,
-          }}>
-          <TouchableHighlight
-            activeOpacity={0.6}
-            underlayColor="#DDDffD"
-            onPress={this.handleButtonEdit}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignItems: 'center',
-                backgroundColor: '#DDDDDD',
-                padding: 10,
-                width: 68,
-                height: 68,
-                borderRadius: 34,
-              }}>
-              <MaterialIcons size={42} name="edit" />
-            </View>
-          </TouchableHighlight>
-        </View>
+          }}></View>
       </ScrollView>
     );
   }

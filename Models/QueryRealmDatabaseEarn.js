@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostLifeDatabase8.db'});
+const db = openDatabase({name: 'CostLifeDatabase10.db'});
 
 export default class QueryRealmDatabaseEarn {
   constructor() {
@@ -109,12 +109,16 @@ export default class QueryRealmDatabaseEarn {
           'SELECT dsid, SUM(money) as sum FROM earn_cost where dsid=? GROUP BY dsid',
           [dsid],
           function (tx, res) {
-            console.log('result earn: ', res.rows.length);
             var temp = [];
-            for (let i = 0; i < res.rows.length; ++i) {
-              temp.push(res.rows.item(i));
+            if (res.rows.length <= 0) {
+              temp.push({dsid: dsid, sum: 0});
+              resolve(temp);
+            } else {
+              for (let i = 0; i < res.rows.length; ++i) {
+                temp.push(res.rows.item(i));
+              }
+              resolve(temp);
             }
-            resolve(temp);
           },
           function (error) {
             console.log('get today SElectAll failure!', error);

@@ -5,6 +5,7 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 
 // component
@@ -15,6 +16,7 @@ import QueryRetriveDay from '../../Models/QueryRetriveDay';
 
 //loading
 import LoadingComponent from '../../Components/LoadingComponent';
+import Helpers from '../../Utils/Helpers';
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -29,6 +31,7 @@ export default class HomeScreen extends Component {
   }
 
   componentDidMount() {
+    this.setState({loading: true});
     this.selectAllDataDaySpending();
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
@@ -69,13 +72,19 @@ export default class HomeScreen extends Component {
           renderItem={item => {
             return (
               <DashBoardItem
-                key={item.id}
+                key={item.dsid}
                 navigation={this.props.navigation}
                 item={item}
               />
             );
           }}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.dsid}
+        />
+        <Button
+          title="clickc here"
+          onPress={() => {
+            Helpers.setMonthStringToNumber('Jun');
+          }}
         />
         {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>

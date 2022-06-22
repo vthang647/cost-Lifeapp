@@ -1,3 +1,18 @@
+const months = [
+  {month: 'Jan', val: '01'},
+  {month: 'Feb', val: '02'},
+  {month: 'Mar', val: '03'},
+  {month: 'Apr', val: '04'},
+  {month: 'May', val: '05'},
+  {month: 'Jun', val: '06'},
+  {month: 'Jul', val: '07'},
+  {month: 'Aug', val: '08'},
+  {month: 'Sep', val: '09'},
+  {month: 'Oct', val: '10'},
+  {month: 'Nov', val: '11'},
+  {month: 'Dec', val: '12'},
+];
+
 const Helpers = {
   validateMoney: function (money) {
     let result = String(money).replace('$', '');
@@ -13,6 +28,18 @@ const Helpers = {
   getMoney: function (money) {
     let res = String(money).replace('$', '').trim();
     return String(res).replace('.', '');
+  },
+
+  setMonthStringToNumber: function (date) {
+    let mon = String(date).substring(1, 4);
+    let numMon;
+    months.filter(item => {
+      if (mon == item.month) {
+        numMon = item.val;
+      }
+    });
+    let result = String(date).replace(mon, numMon);
+    return result.trim().split(' ').join('-');
   },
   setMoney: function (numMoney) {
     let lengthOfString = String(numMoney).length;

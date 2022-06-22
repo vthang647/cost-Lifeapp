@@ -1,6 +1,6 @@
 import {openDatabase} from 'react-native-sqlite-storage';
 
-const db = openDatabase({name: 'CostLifeDatabase8.db'});
+const db = openDatabase({name: 'CostLifeDatabase10.db'});
 
 export default class QueryRetriveDay {
   constructor() {
@@ -56,6 +56,14 @@ export default class QueryRetriveDay {
     }
   }
 
+  async getId_aMonth(month) {
+    try {
+      return await this.selectAllIdInAMonth(month);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   selectAll() {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
@@ -99,11 +107,32 @@ export default class QueryRetriveDay {
     });
   }
 
+  selectAllIdInAMonth(month) {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT * FROM day_spending where Month=?',
+          [month],
+          function (tx, res) {
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            console.log('get SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
   calMonthQuantity() {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
-          'SELECT timestamp, COUNT(dsid) FROM day_spending group by timestamp',
+          'SELECT Month, COUNT(dsid) as numday FROM day_spending group by Month',
           [],
           function (tx, res) {
             var temp = [];

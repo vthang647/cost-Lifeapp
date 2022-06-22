@@ -50,7 +50,7 @@ function TabRoutes() {
         name={NavigationString.ADD}
         options={({navigation}) => ({
           tabBarIcon: ({focused, size, color}) => {
-            return <Ionic name="add-circle" size={size + 36} color="#ff2448" />;
+            return <Ionic name="add-circle" size={size + 55} color="#ff2448" />;
           },
 
           tabBarButton: props => {
@@ -63,7 +63,14 @@ function TabRoutes() {
                   ...styles.shadow,
                 }}
                 onPress={() => navigation.navigate('Create New')}>
-                <View style={{width: 70, height: 70, borderRadius: 35}}>
+                <View
+                  style={{
+                    width: 70,
+                    right: 2.5,
+                    height: 90,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   {props.children}
                 </View>
               </TouchableOpacity>
@@ -87,10 +94,11 @@ const styles = StyleSheet.create({
     shadowColor: '#7f5df0',
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 5,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5,
+    shadowOpacity: 1.25,
+    shadowRadius: 1.5,
+    elevation: 3,
+    borderRadius: 30,
   },
 });

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "66172803980",
+    "project_id": "costlifeapp",
+    "storage_bucket": "costlifeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66172803980:android:76f3df90329871f2bed4a9",
+        "android_client_info": {
+          "package_name": "com.costlifeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "66172803980-e659liauhiguht4fkolgqfj1nekpfm95.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.costlifeapp",
+            "certificate_hash": "c8eb1948e8abf4a4d685175f4889fb40d331616f"
+          }
+        },
+        {
+          "client_id": "66172803980-k1vfpt9mpo0tqui8dfc1tes7vi2gedqh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq-kH7tCYAF069ft2I-AWyzRKiONcHmgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66172803980-k1vfpt9mpo0tqui8dfc1tes7vi2gedqh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

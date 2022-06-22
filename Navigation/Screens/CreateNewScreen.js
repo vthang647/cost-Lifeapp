@@ -46,10 +46,15 @@ export default class CreateNewScreen extends Component {
       dayCreated: false,
       daySpending: null,
     };
+  }
+
+  componentDidMount() {
+    this.setLoading(true);
     this.getInsertDaySpending();
     this.selectDaySpending();
     this.preLsSpendCost();
     this.preLsEarnCost();
+    this.setLoading(false);
   }
 
   setLoading(val) {
@@ -62,12 +67,14 @@ export default class CreateNewScreen extends Component {
     this.dbSpend.insert(info);
     this.preLsSpendCost();
   };
+  componentWillUnmount() {
+    this.setLoading(false);
+  }
 
   preLsSpendCost = () => {
     this.dbSpend
       .getDetailsToday()
       .then(res => {
-        console.log('data table spend: ', res);
         this.setState({dataTableSpend: [...res]});
       })
       .catch(err => {
@@ -88,9 +95,9 @@ export default class CreateNewScreen extends Component {
       });
     this.preLsSpendCost();
   };
-  // -----------------^^^^-----Spend-------------------------
-  // --------------------==--Spend-------------------------
-  // --------------------==--Spend-------------------------
+  // -----------------^^^^-Spend-------------------------
+  // ------------------==--Spend-------------------------
+  // ------------------==--Spend-------------------------
 
   // --------------EARN-----v----------------
   preLsEarnCost = () => {
@@ -128,11 +135,10 @@ export default class CreateNewScreen extends Component {
   // Retrive Queryday
   insertDaySpending() {
     const day = new Date();
-
     let daySpend = {
       dsid: uuidv4(),
-      timestamp: DashBoardItemUtil.refreshHeader(new Date()),
-      Month: day.getMonth + 1,
+      timestamp: DashBoardItemUtil.refreshHeader(day),
+      Month: day.getMonth() + 1,
       status: true,
     };
 
@@ -148,10 +154,8 @@ export default class CreateNewScreen extends Component {
     let today = DashBoardItemUtil.refreshHeader(new Date());
     this.dbDaySpending.getDetailsToday(today).then(res => {
       if (res != null) {
-        console.log('1111111111', res.dsid);
         this.setState({daySpending: res});
       } else if (res == null) {
-        console.log('22222222222');
         this.insertDaySpending();
       } else {
         console.log('selectDaySpending error');
@@ -201,14 +205,6 @@ export default class CreateNewScreen extends Component {
               labelMoney={this.state.labelMoneyEarn}
               handleButtonDelete={this.handleButtonDeleteEarn}
             />
-          </View>
-          <View style={styles.viewButtonSave}>
-            <TouchableOpacity
-              style={styles.btnSave}
-              onPress={this.handleButtonSave}>
-              <MaterialIcons size={25} name="save" />
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>Save</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
         {this.state.loading ? <LoadingComponent /> : null}

@@ -9,6 +9,14 @@ const ItemStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
     margin: 9,
+    shadowColor: '#7f5df0',
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.5,
+    elevation: 3,
   },
   headerItem: {
     flex: 3,
