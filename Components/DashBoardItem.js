@@ -68,7 +68,7 @@ export default class DashBoardItem extends Component {
         </View>
         <View style={ItemStyle.footerItem}>
           <Text style={{fontWeight: 'bold'}}>
-            Sum Spend :$ {this.state.sumSpend}
+            Sum Spend :$ {Helpers.setMoney(this.state.sumSpend)}
           </Text>
         </View>
       </TouchableOpacity>

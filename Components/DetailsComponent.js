@@ -33,42 +33,34 @@ export default class DetailsComponent extends Component {
           <View style={styles.item}>
             <Text style={styles.textx}>
               Sum Money spend:{' '}
-              <Text style={{fontSize: 16}}>{Helpers.setMoney(sumS)}</Text>
+              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                {Helpers.setMoney(sumS)}
+              </Text>
             </Text>
-            <View>
-              <MaterialIcons size={18} name="payments" />
-            </View>
           </View>
           <View style={styles.item}>
             <Text style={styles.textx}>
               Spend per day:{' '}
-              <Text style={{fontSize: 16}}>
+              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
                 {Helpers.setMoney(arravgSpendMonth)}
               </Text>
             </Text>
-            <View>
-              <MaterialIcons size={18} name="payments" />
-            </View>
           </View>
           <View style={styles.item}>
             <Text style={styles.textx}>
               Sum Money Earned:{' '}
-              <Text style={{fontSize: 16}}>{Helpers.setMoney(sumE)}</Text>
+              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                {Helpers.setMoney(sumE)}
+              </Text>
             </Text>
-            <View>
-              <MaterialIcons size={18} name="payments" />
-            </View>
           </View>
           <View style={styles.item}>
             <Text style={styles.textx}>
               Earned per day:{' '}
-              <Text style={{fontSize: 16}}>
+              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
                 {Helpers.setMoney(arravgEarnMonth)}
               </Text>
             </Text>
-            <View>
-              <MaterialIcons size={18} name="payments" />
-            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -78,7 +70,6 @@ export default class DetailsComponent extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     borderBottomWidth: 9,
     margin: 6,
   },
@@ -87,7 +78,6 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   textx: {
-    fontWeight: '900',
     fontSize: 14,
     lineHeight: 15,
   },

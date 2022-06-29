@@ -17,6 +17,7 @@ import QueryRetriveDay from '../../Models/QueryRetriveDay';
 //loading
 import LoadingComponent from '../../Components/LoadingComponent';
 import Helpers from '../../Utils/Helpers';
+import Color from '../../Styles/Color';
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -25,13 +26,12 @@ export default class HomeScreen extends Component {
     this.dbDay = new QueryRetriveDay();
 
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
     };
   }
 
   componentDidMount() {
-    this.setState({loading: true});
     this.selectAllDataDaySpending();
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
@@ -66,7 +66,12 @@ export default class HomeScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: Color.dabutchi,
+        }}>
         <FlatList
           data={this.state.data}
           renderItem={item => {
@@ -79,12 +84,6 @@ export default class HomeScreen extends Component {
             );
           }}
           keyExtractor={item => item.dsid}
-        />
-        <Button
-          title="clickc here"
-          onPress={() => {
-            Helpers.setMonthStringToNumber('Jun');
-          }}
         />
         {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>

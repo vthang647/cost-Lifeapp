@@ -11,6 +11,7 @@ import DetailsPerDayScreen from './Screens/DetailsPerDayScreen';
 import DashBoardItem from '../Components/DashBoardItem';
 
 import DrawRoutes from './DrawRoutes';
+import Color from '../Styles/Color';
 const Stack = createStackNavigator();
 
 function Routes() {
@@ -20,14 +21,24 @@ function Routes() {
         <Stack.Screen
           component={DrawRoutes}
           name="Home"
-          options={{headerShown: false}}
+          options={{
+            headerShown: false,
+            headerStyle: {backgroundColor: Color.skyColor__},
+          }}
         />
         <Stack.Screen
           component={CreateNewScreen}
           name="Create New"
-          options={{headerShown: true}}
+          options={{
+            headerShown: true,
+            headerStyle: {backgroundColor: Color.skyColor__},
+          }}
         />
-        <Stack.Screen component={DetailsPerDayScreen} name="DetailsThatDay" />
+        <Stack.Screen
+          component={DetailsPerDayScreen}
+          name="DetailsThatDay"
+          options={{headerStyle: {backgroundColor: Color.skyColor__}}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

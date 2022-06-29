@@ -14,7 +14,8 @@ import TabRoutes from './TabRoutes';
 // create new screen
 import CreateNewScreen from './Screens/CreateNewScreen';
 
-// const
+// color
+import Color from '../Styles/Color';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,12 +25,18 @@ function DrawRoutes() {
       <Drawer.Screen
         component={TabRoutes}
         name="HOME"
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          headerStyle: {backgroundColor: Color.skyColor__},
+        }}
       />
       <Drawer.Screen
         component={SettingsScreen}
         name={NavigationString.SETTINGS}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerStyle: {backgroundColor: Color.skyColor__},
+        }}
       />
     </Drawer.Navigator>
   );

@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import {TextInputMask} from 'react-native-masked-text';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 
 // help in utils folder
 import Helpers from '../Utils/Helpers';
@@ -23,6 +29,7 @@ export default class InputInfoComponent extends Component {
       causeSpend: '',
       isPassCause: true,
       isPassMoney: true,
+      sum: this.props.sumM,
     };
   }
 
@@ -31,7 +38,6 @@ export default class InputInfoComponent extends Component {
       if (Helpers.validateEmptyMoney(this.state.initMoneySpend)) {
         this.setState({isPassCause: true, isPassMoney: true});
         let monneyFilter = Helpers.getMoney(this.state.initMoneySpend);
-        console.log('money filter: ', this.props.dsid.dsid);
         const info = {
           id: uuidv4(),
           money: monneyFilter,
@@ -41,7 +47,6 @@ export default class InputInfoComponent extends Component {
           dsid: this.props.dsid.dsid,
         };
 
-        console.log(info);
         this.props.handleButtonAdd(info);
         this.resetVar();
       } else {
@@ -58,7 +63,7 @@ export default class InputInfoComponent extends Component {
 
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <View style={styles.viewInput}>
           <View style={styles.viewInputDimensionPayment}>
             <Text style={styles.labelSpend}>
@@ -128,13 +133,30 @@ export default class InputInfoComponent extends Component {
           </View>
         </View>
         <View style={styles.viewInput}>
+          <View
+            style={{
+              flex: 8,
+              justifyContent: 'flex-end',
+              paddingBottom: 8,
+            }}>
+            <Text
+              style={{
+                marginLeft: 12,
+                marginBottom: 3,
+                fontWeight: '600',
+
+                fontSize: 14,
+              }}>
+              Sum {this.props.labelMoney} : {Helpers.setMoney(this.state.sum)}
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.addToTableSpend()}>
             <MaterialIcons size={25} name="add" />
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }

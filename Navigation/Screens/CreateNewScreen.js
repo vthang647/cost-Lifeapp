@@ -31,6 +31,9 @@ import {v4 as uuidv4} from 'uuid';
 // utils
 import DashBoardItemUtil from '../../Utils/DashBoardItemUtil';
 
+// color
+import Color from '../../Styles/Color';
+
 export default class CreateNewScreen extends Component {
   constructor(props) {
     super(props);
@@ -42,44 +45,71 @@ export default class CreateNewScreen extends Component {
       labelMoneyEarn: 'Money Earn',
       dataTableSpend: [],
       dataTableEarn: [],
-      loading: false,
+      loading: true,
       dayCreated: false,
       daySpending: null,
+      sumEarn: 0,
+      sumSpend: 0,
     };
   }
 
   componentDidMount() {
-    this.setLoading(true);
-    this.getInsertDaySpending();
-    this.selectDaySpending();
-    this.preLsSpendCost();
-    this.preLsEarnCost();
-    this.setLoading(false);
+    this.initial();
+  }
+
+  async initial() {
+    await this.setLoading(true);
+    await this.getInsertDaySpending();
+    await this.preLsSpendCost();
+    await this.preLsEarnCost();
+    await this.selectSumMoneyEarnPerDay();
+    await this.selectSumMoneySpendPerDay();
+    await this.setLoading(false);
   }
 
   setLoading(val) {
-    this.setState({loading: val});
+    return new Promise((resolve, reject) => {
+      this.setState({loading: val});
+      resolve(this.state.loading);
+    });
   }
   // ------------------------Spend------vv-----------------
   // ------------------------Spend---v--vv--v--------------
   // ------------------------Spend-----vvvv----------------
   handleButtonAddSpend = info => {
     this.dbSpend.insert(info);
+    // this.selectSumMoneySpendPerDay();
     this.preLsSpendCost();
   };
-  componentWillUnmount() {
-    this.setLoading(false);
+
+  selectSumMoneySpendPerDay() {
+    return new Promise((resolve, reject) => {
+      this.dbSpend
+        .getselectSumDsid(this.state.daySpending.dsid)
+        .then(res => {
+          this.setState({sumSpend: res[0].sum});
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+          this.setState({sumSpend: 0});
+        });
+    });
   }
 
   preLsSpendCost = () => {
-    this.dbSpend
-      .getDetailsToday()
-      .then(res => {
-        this.setState({dataTableSpend: [...res]});
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      this.dbSpend
+        .getDetailsToday()
+        .then(res => {
+          this.setState({dataTableSpend: [...res]});
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+          console.log(err);
+        });
+    });
   };
 
   handleButtonDeleteSpend = (index, id) => {
@@ -101,20 +131,40 @@ export default class CreateNewScreen extends Component {
 
   // --------------EARN-----v----------------
   preLsEarnCost = () => {
-    this.dbEarn
-      .getDetailsToday()
-      .then(res => {
-        this.setState({dataTableEarn: [...res]});
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      this.dbEarn
+        .getDetailsToday()
+        .then(res => {
+          this.setState({dataTableEarn: [...res]});
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+          console.log(err);
+        });
+    });
   };
 
   handleButtonAddEarn = info => {
     this.dbEarn.insert(info);
+    // this.selectSumMoneyEarnPerDay();
     this.preLsEarnCost();
   };
+
+  selectSumMoneyEarnPerDay() {
+    return new Promise((resolve, reject) => {
+      this.dbEarn
+        .getselectSumDsid(this.state.daySpending.dsid)
+        .then(res => {
+          this.setState({sumEarn: res[0].sum});
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+          this.setState({sumEarn: 0});
+        });
+    });
+  }
 
   handleButtonDeleteEarn = (index, id) => {
     this.setLoading(true);
@@ -151,33 +201,31 @@ export default class CreateNewScreen extends Component {
   }
 
   getInsertDaySpending() {
-    let today = DashBoardItemUtil.refreshHeader(new Date());
-    this.dbDaySpending.getDetailsToday(today).then(res => {
-      if (res != null) {
-        this.setState({daySpending: res});
-      } else if (res == null) {
-        this.insertDaySpending();
-      } else {
-        console.log('selectDaySpending error');
-      }
+    return new Promise((resolve, reject) => {
+      let today = DashBoardItemUtil.refreshHeader(new Date());
+      this.dbDaySpending.getDetailsToday(today).then(res => {
+        if (res != null) {
+          this.setState({daySpending: res});
+        } else if (res == null) {
+          this.insertDaySpending();
+        } else {
+          console.log('selectDaySpending error');
+        }
+        resolve(res);
+      });
     });
   }
 
-  selectDaySpending() {
-    this.dbDaySpending
-      .getDetails()
-      .then(res => {
-        console.log('select all day: ', res);
-      })
-      .catch(err => {
-        console.log('select all day: ', err);
-      });
-  }
   // selected day spending
 
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: Color.dabutchi,
+        }}>
         <ScrollView nestedScrollEnabled={true}>
           <View style={styles.container}>
             <InputInfoComponent
@@ -185,6 +233,7 @@ export default class CreateNewScreen extends Component {
               dsid={this.state.daySpending}
               resetStatus={this.resetStatus}
               labelMoney={this.state.labelMoneySpend}
+              sumM={this.state.sumSpend}
             />
             <TableDisplayComponent
               dataTable={this.state.dataTableSpend}
@@ -199,6 +248,7 @@ export default class CreateNewScreen extends Component {
               dsid={this.state.daySpending}
               resetStatus={this.resetStatus}
               labelMoney={this.state.labelMoneyEarn}
+              sumM={this.state.sumEarn}
             />
             <TableDisplayComponent
               dataTable={this.state.dataTableEarn}
@@ -206,6 +256,7 @@ export default class CreateNewScreen extends Component {
               handleButtonDelete={this.handleButtonDeleteEarn}
             />
           </View>
+          <View style={{height: 150}}></View>
         </ScrollView>
         {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>

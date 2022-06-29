@@ -27,7 +27,7 @@ const Helpers = {
   },
   getMoney: function (money) {
     let res = String(money).replace('$', '').trim();
-    return String(res).replace('.', '');
+    return String(res).trim().split('.').join('');
   },
 
   setMonthStringToNumber: function (date) {

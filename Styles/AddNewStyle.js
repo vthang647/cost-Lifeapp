@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native';
+import Color from './Color';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 5,
   },
   row1: {
@@ -62,13 +62,14 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   button: {
-    margin: 12,
+    flex: 2,
+    margin: 3,
     alignItems: 'center',
-    backgroundColor: '#ff2448',
+    // backgroundColor: '#ff2448',
+    backgroundColor: Color.green_2,
     elevation: 5,
-    borderRadius: 30,
+    borderRadius: 5,
     padding: 15,
-    width: 60,
   },
   btnSave: {
     margin: 12,

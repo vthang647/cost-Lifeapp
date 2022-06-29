@@ -228,7 +228,7 @@ export default class DetailsScreen extends Component {
         let avg = parseInt(SumMoney) / parseInt(dayuse);
         this.setState(
           {
-            arravgSpendMonth: [...this.state.arravgSpendMonth, avg],
+            arravgSpendMonth: [...this.state.arravgSpendMonth, Math.floor(avg)],
           },
           () => {
             console.log(this.state.arravgSpendMonth);
@@ -241,10 +241,16 @@ export default class DetailsScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: Color.dabutchi,
+        }}>
         {this.state.Months.map((item, index) => {
           return (
             <DetailsComponent
+              key={index}
               item={item}
               sumE={this.state.arrsumEarnMonth[index]}
               sumS={this.state.arrsumSpendMonth[index]}

@@ -9,6 +9,7 @@ import SettingsScreen from './Screens/SettingsScreen';
 import NavigationString from '../Utils/NavigationString';
 
 import Ionic from 'react-native-vector-icons/Ionicons';
+import Color from '../Styles/Color';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,16 +18,18 @@ function TabRoutes() {
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
+        tabBarActiveTintColor: Color.boardblack,
         tabBarStyle: {
           position: 'absolute',
           bottom: 25,
           left: 20,
           right: 20,
           elevation: 0,
-          backgroundcolor: '#ffffff',
+          backgroundcolor: Color.blue_,
           borderRadius: 15,
           height: 63,
         },
+
         tabBarIcon: ({focused, size, color}) => {
           let iconName;
 
@@ -42,7 +45,10 @@ function TabRoutes() {
       <Tab.Screen
         component={HomeScreen}
         name={NavigationString.HOME}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerStyle: {backgroundColor: Color.skyColor__},
+        }}
       />
 
       <Tab.Screen
@@ -52,7 +58,7 @@ function TabRoutes() {
           tabBarIcon: ({focused, size, color}) => {
             return <Ionic name="add-circle" size={size + 55} color="#ff2448" />;
           },
-
+          headerStyle: {backgroundColor: Color.skyColor__},
           tabBarButton: props => {
             return (
               <TouchableOpacity
@@ -81,7 +87,10 @@ function TabRoutes() {
       <Tab.Screen
         component={DetailsScreen}
         name={NavigationString.DETAILS}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerStyle: {backgroundColor: Color.skyColor__},
+        }}
       />
     </Tab.Navigator>
   );
