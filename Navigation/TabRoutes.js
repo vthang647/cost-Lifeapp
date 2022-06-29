@@ -56,7 +56,13 @@ function TabRoutes() {
         name={NavigationString.ADD}
         options={({navigation}) => ({
           tabBarIcon: ({focused, size, color}) => {
-            return <Ionic name="add-circle" size={size + 55} color="#ff2448" />;
+            return (
+              <Ionic
+                name="add-circle"
+                size={size + 55}
+                color={Color.buttonAdd}
+              />
+            );
           },
           headerStyle: {backgroundColor: Color.skyColor__},
           tabBarButton: props => {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 
 // utils
 import Helpers from '../Utils/Helpers';
@@ -16,53 +16,98 @@ export default class DetailsComponent extends Component {
   }
 
   render() {
-    let {item, sumE, sumS, arravgEarnMonth, arravgSpendMonth} = this.props;
+    let {
+      item,
+      sumE,
+      sumS,
+      arravgEarnMonth,
+      arravgSpendMonth,
+      arrCauseEarn,
+      arrCauseSpend,
+    } = this.props;
     return (
       <SafeAreaView>
-        <View style={styles.container}>
-          <View
-            style={{
-              borderBottomColor: 'gray',
-              margin: 9,
-              borderBottomWidth: 1,
-            }}>
-            <Text style={{fontSize: 24, fontWeight: '900'}}>
-              Month: {item.Month}
-            </Text>
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.textx}>
-              Sum Money spend:{' '}
-              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
-                {Helpers.setMoney(sumS)}
+        <ScrollView>
+          <View style={styles.container}>
+            <View
+              style={{
+                borderBottomColor: 'gray',
+                margin: 9,
+                borderBottomWidth: 1,
+              }}>
+              <Text style={{fontSize: 24, fontWeight: '900'}}>
+                Month: {item.Month}
               </Text>
-            </Text>
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.textx}>
-              Spend per day:{' '}
-              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
-                {Helpers.setMoney(arravgSpendMonth)}
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>
+                Sum Money spend:{' '}
+                <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                  {Helpers.setMoney(sumS)}
+                </Text>
               </Text>
-            </Text>
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.textx}>
-              Sum Money Earned:{' '}
-              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
-                {Helpers.setMoney(sumE)}
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>
+                Spend per day:{' '}
+                <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                  {Helpers.setMoney(arravgSpendMonth)}
+                </Text>
               </Text>
-            </Text>
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.textx}>
-              Earned per day:{' '}
-              <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
-                {Helpers.setMoney(arravgEarnMonth)}
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>
+                Sum Money Earned:{' '}
+                <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                  {Helpers.setMoney(sumE)}
+                </Text>
               </Text>
-            </Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>
+                Earned per day:{' '}
+                <Text style={{fontSize: 16, fontWeight: '900', lineHeight: 32}}>
+                  {Helpers.setMoney(arravgEarnMonth)}
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>Cause Earn Top: </Text>
+              {arrCauseEarn.map((item, index) => {
+                return (
+                  <View key={item.id}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '900',
+                        lineHeight: 32,
+                      }}>
+                      {item.cause} - {Helpers.setMoney(item.money)} $
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.textx}>Cause Earn Top: </Text>
+              {arrCauseSpend.map((item, index) => {
+                return (
+                  <View key={item.id}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '900',
+                        lineHeight: 32,
+                      }}>
+                      {item.cause} - {Helpers.setMoney(item.money)} $
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
           </View>
-        </View>
+          <View style={{height: 200}}></View>
+        </ScrollView>
       </SafeAreaView>
     );
   }

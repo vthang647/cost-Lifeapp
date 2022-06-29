@@ -43,6 +43,8 @@ export default class DetailsScreen extends Component {
       arrsumEarnMonth: [],
       arravgSpendMonth: [],
       arravgEarnMonth: [],
+      causeTopEarn: [],
+      causeTopSpend: [],
       loading: false,
     };
   }
@@ -68,9 +70,7 @@ export default class DetailsScreen extends Component {
       this.dbD
         .getMonth()
         .then(res => {
-          this.setState({Months: [...res]}, () => {
-            console.log(this.state.Months);
-          });
+          this.setState({Months: [...res]});
           resolve(this.state.Months);
         })
         .catch(e => {
@@ -84,15 +84,10 @@ export default class DetailsScreen extends Component {
         this.dbD
           .getId_aMonth(element)
           .then(res => {
-            this.setState(
-              {
-                arr_id_in_month: [...this.state.arr_id_in_month, [...res]],
-                loading: false,
-              },
-              () => {
-                console.log(this.state.arr_id_in_month);
-              },
-            );
+            this.setState({
+              arr_id_in_month: [...this.state.arr_id_in_month, [...res]],
+              loading: false,
+            });
             resolve(res);
           })
           .catch(e => {
@@ -113,16 +108,30 @@ export default class DetailsScreen extends Component {
     return new Promise((resolve, reject) => {
       this.dbE
         .getSelectCauseTop()
-        .then(res => console.log(res))
-        .catch(e => console.log(e));
+        .then(res => {
+          this.setState({causeTopEarn: res});
+          resolve(res);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
     });
   }
   getSelectCauseSpend() {
     return new Promise((resolve, reject) => {
       this.dbS
         .getSelectCauseTop()
-        .then(res => console.log(res))
-        .catch(e => console.log(e));
+        .then(res => {
+          this.setState({
+            causeTopSpend: res,
+          });
+          resolve(res);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
     });
   }
 
@@ -156,7 +165,6 @@ export default class DetailsScreen extends Component {
                       }),
                       () => {
                         resolve(this.state.arrsumEarnMonth);
-                        console.log(this.state.arrsumEarnMonth);
                       },
                     );
                   }
@@ -200,7 +208,6 @@ export default class DetailsScreen extends Component {
                       }),
                       () => {
                         resolve(this.state.arrsumSpendMonth);
-                        console.log(this.state.arrsumSpendMonth);
                       },
                     );
                   }
@@ -224,14 +231,9 @@ export default class DetailsScreen extends Component {
 
         let avg = parseInt(SumMoney) / parseInt(dayuse);
 
-        this.setState(
-          {
-            arravgEarnMonth: [...this.state.arravgEarnMonth, Math.floor(avg)],
-          },
-          () => {
-            console.log(this.state.arravgEarnMonth);
-          },
-        );
+        this.setState({
+          arravgEarnMonth: [...this.state.arravgEarnMonth, Math.floor(avg)],
+        });
       }
       resolve(this.state.arravgEarnMonth);
     });
@@ -245,14 +247,9 @@ export default class DetailsScreen extends Component {
         let dayuse = element.numday;
 
         let avg = parseInt(SumMoney) / parseInt(dayuse);
-        this.setState(
-          {
-            arravgSpendMonth: [...this.state.arravgSpendMonth, Math.floor(avg)],
-          },
-          () => {
-            console.log(this.state.arravgSpendMonth);
-          },
-        );
+        this.setState({
+          arravgSpendMonth: [...this.state.arravgSpendMonth, Math.floor(avg)],
+        });
       }
       resolve(this.state.arravgSpendMonth);
     });
@@ -275,6 +272,8 @@ export default class DetailsScreen extends Component {
               sumS={this.state.arrsumSpendMonth[index]}
               arravgEarnMonth={this.state.arravgEarnMonth[index]}
               arravgSpendMonth={this.state.arravgSpendMonth[index]}
+              arrCauseEarn={this.state.causeTopEarn}
+              arrCauseSpend={this.state.causeTopSpend}
             />
           );
         })}

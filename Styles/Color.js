@@ -14,6 +14,8 @@ const Color = {
   skyColor__: '#afe4f9',
   cloud: '#fefefe',
   could_: '#a3dff7',
+  lacay: '#73c877',
+  buttonAdd: '#ff2448',
 };
 
 export default Color;

@@ -161,7 +161,7 @@ export default class QueryRealmDatabaseSpend {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
         txn.executeSql(
-          'SELECT cause FROM spend_cost ORDER BY money DESC LIMIT 5',
+          'SELECT * FROM spend_cost ORDER BY money DESC LIMIT 5',
           [],
           function (tx, res) {
             var temp = [];
