@@ -11,23 +11,29 @@ import NavigationString from '../Utils/NavigationString';
 // Routes
 import TabRoutes from './TabRoutes';
 
-// create new screen
-import CreateNewScreen from './Screens/CreateNewScreen';
+// custom
+import CustomDrawer from './CustomDrawer';
 
 // color
 import Color from '../Styles/Color';
 
 const Drawer = createDrawerNavigator();
 
+//icon
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 function DrawRoutes() {
   return (
-    <Drawer.Navigator screenOptions={{}}>
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         component={TabRoutes}
         name="HOME"
         options={{
           headerShown: false,
           headerStyle: {backgroundColor: Color.skyColor__},
+          drawerIcon: ({color}) => {
+            <Ionicons name="home-outline" size={22} color={color} />;
+          },
         }}
       />
       <Drawer.Screen
@@ -36,6 +42,9 @@ function DrawRoutes() {
         options={{
           headerShown: true,
           headerStyle: {backgroundColor: Color.skyColor__},
+          drawerIcon: ({color}) => {
+            <Ionicons name="person-outline" size={22} color={color} />;
+          },
         }}
       />
     </Drawer.Navigator>
