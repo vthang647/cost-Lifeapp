@@ -105,6 +105,25 @@ export default class DetailsScreen extends Component {
     await this.getSumSpendInMonth();
     await this.getavgEarn_aDay();
     await this.getavgSpend_aDay();
+    await this.getSelectCauseEarn();
+    await this.getSelectCauseSpend();
+  }
+
+  getSelectCauseEarn() {
+    return new Promise((resolve, reject) => {
+      this.dbE
+        .getSelectCauseTop()
+        .then(res => console.log(res))
+        .catch(e => console.log(e));
+    });
+  }
+  getSelectCauseSpend() {
+    return new Promise((resolve, reject) => {
+      this.dbS
+        .getSelectCauseTop()
+        .then(res => console.log(res))
+        .catch(e => console.log(e));
+    });
   }
 
   getSumEarnInMonth() {

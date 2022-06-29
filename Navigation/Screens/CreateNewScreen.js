@@ -78,7 +78,7 @@ export default class CreateNewScreen extends Component {
   // ------------------------Spend-----vvvv----------------
   handleButtonAddSpend = info => {
     this.dbSpend.insert(info);
-    // this.selectSumMoneySpendPerDay();
+    this.selectSumMoneySpendPerDay();
     this.preLsSpendCost();
   };
 
@@ -118,7 +118,7 @@ export default class CreateNewScreen extends Component {
     this.dbSpend
       .delete(id)
       .then(res => {
-        this.setLoading(false);
+        this.initial();
       })
       .catch(rej => {
         console.log('er r r de lete');
@@ -147,7 +147,7 @@ export default class CreateNewScreen extends Component {
 
   handleButtonAddEarn = info => {
     this.dbEarn.insert(info);
-    // this.selectSumMoneyEarnPerDay();
+    this.selectSumMoneyEarnPerDay();
     this.preLsEarnCost();
   };
 
@@ -172,7 +172,7 @@ export default class CreateNewScreen extends Component {
     this.dbEarn
       .delete(id)
       .then(res => {
-        this.setLoading(false);
+        this.initial();
       })
       .catch(rej => {
         console.log('er r r de lete');

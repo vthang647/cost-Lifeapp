@@ -58,6 +58,14 @@ export default class QueryRealmDatabaseEarn {
     }
   }
 
+  async getSelectCauseTop() {
+    try {
+      return await this.selectCauseTop();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   selectAll() {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
@@ -150,6 +158,28 @@ export default class QueryRealmDatabaseEarn {
     });
   }
 
+  selectCauseTop() {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT cause FROM earn_cost ORDER BY money DESC LIMIT 5',
+          [],
+          function (tx, res) {
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            reject(error);
+            console.log('get today SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
   insert(spend_object) {
     db.transaction(function (tx) {
       tx.executeSql(
@@ -165,18 +195,10 @@ export default class QueryRealmDatabaseEarn {
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'You are Add new Successfully',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('HomeScreen'),
-                },
-              ],
-              {cancelable: false},
-            );
-          } else alert('Add Failed');
+            console.log('add successfully!');
+          } else {
+            console.log('add fail!');
+          }
         },
       );
     });

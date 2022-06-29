@@ -58,6 +58,14 @@ export default class QueryRealmDatabaseSpend {
     }
   }
 
+  async getSelectCauseTop() {
+    try {
+      return await this.selectCauseTop();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   selectAll() {
     return new Promise((resolve, reject) => {
       db.transaction(function (txn) {
@@ -142,6 +150,28 @@ export default class QueryRealmDatabaseSpend {
             resolve(temp);
           },
           function (error) {
+            console.log('get today SElectAll failure!', error);
+          },
+        );
+      });
+    });
+  }
+
+  selectCauseTop() {
+    return new Promise((resolve, reject) => {
+      db.transaction(function (txn) {
+        txn.executeSql(
+          'SELECT cause FROM spend_cost ORDER BY money DESC LIMIT 5',
+          [],
+          function (tx, res) {
+            var temp = [];
+            for (let i = 0; i < res.rows.length; ++i) {
+              temp.push(res.rows.item(i));
+            }
+            resolve(temp);
+          },
+          function (error) {
+            reject(error);
             console.log('get today SElectAll failure!', error);
           },
         );

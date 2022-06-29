@@ -29,7 +29,6 @@ export default class InputInfoComponent extends Component {
       causeSpend: '',
       isPassCause: true,
       isPassMoney: true,
-      sum: this.props.sumM,
     };
   }
 
@@ -62,6 +61,8 @@ export default class InputInfoComponent extends Component {
   };
 
   render() {
+    let sum = this.props.sumM;
+
     return (
       <SafeAreaView>
         <View style={styles.viewInput}>
@@ -147,7 +148,7 @@ export default class InputInfoComponent extends Component {
 
                 fontSize: 14,
               }}>
-              Sum {this.props.labelMoney} : {Helpers.setMoney(this.state.sum)}
+              Sum {this.props.labelMoney} : {Helpers.setMoney(sum)}
             </Text>
           </View>
           <TouchableOpacity
