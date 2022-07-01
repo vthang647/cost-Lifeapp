@@ -24,15 +24,28 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function DrawRoutes() {
   return (
-    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawer {...props} />}
+      useLegacyImplementation={true}
+      screenOptions={{
+        headerShown: false,
+        drawerActiveBackgroundColor: '#aa18ea',
+        drawerActiveTintColor: '#fff',
+        drawerInactiveTintColor: '#333',
+        drawerLabelStyle: {
+          fontFamily: 'Roboto-Medium',
+          fontSize: 15,
+          marginLeft: -25,
+        },
+      }}>
       <Drawer.Screen
         component={TabRoutes}
         name="HOME"
         options={{
           headerShown: false,
           headerStyle: {backgroundColor: Color.skyColor__},
-          drawerIcon: ({color}) => {
-            <Ionicons name="home-outline" size={22} color={color} />;
+          drawerIcon: ({color, size}) => {
+            return <Ionicons name="home-outline" size={size} color={color} />;
           },
         }}
       />
@@ -42,8 +55,8 @@ function DrawRoutes() {
         options={{
           headerShown: true,
           headerStyle: {backgroundColor: Color.skyColor__},
-          drawerIcon: ({color}) => {
-            <Ionicons name="person-outline" size={22} color={color} />;
+          drawerIcon: ({color, size}) => {
+            return <Ionicons name="save-outline" size={size} color={color} />;
           },
         }}
       />

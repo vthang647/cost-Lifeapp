@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  SafeAreaView,
-  TouchableOpacity,
-  Button,
-} from 'react-native';
+import {View, Text, FlatList, SafeAreaView, StatusBar} from 'react-native';
 
 // component
 import DashBoardItem from '../../Components/DashBoardItem';
@@ -85,7 +78,7 @@ export default class HomeScreen extends Component {
           }}
           keyExtractor={item => item.dsid}
         />
-        <View style={{height: 200}}></View>
+
         {this.state.loading ? <LoadingComponent /> : null}
       </SafeAreaView>
     );

@@ -3,6 +3,9 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
+// require('dotenv').config();
+// import 'dotenv/config'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+
 GoogleSignin.configure({
   webClientId:
     '66172803980-k1vfpt9mpo0tqui8dfc1tes7vi2gedqh.apps.googleusercontent.com',

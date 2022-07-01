@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
 
 // icon
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -25,6 +25,9 @@ import Color from '../../Styles/Color';
 // loading
 import LoadingComponent from '../../Components/LoadingComponent';
 
+// utils
+import Helpers from '../../Utils/Helpers';
+
 export default class DetailsScreen extends Component {
   constructor(props) {
     super(props);
@@ -45,12 +48,11 @@ export default class DetailsScreen extends Component {
       arravgEarnMonth: [],
       causeTopEarn: [],
       causeTopSpend: [],
-      loading: false,
+      loading: true,
     };
   }
 
   componentDidMount() {
-    this.setState({loading: true});
     this.getQuatityMonth();
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
@@ -62,10 +64,17 @@ export default class DetailsScreen extends Component {
 
   updateState() {
     this.getQuatityMonth();
-    this.setState({loading: false});
+  }
+
+  isLoading(val) {
+    return new Promise((resolve, reject) => {
+      this.setState({loading: val});
+      resolve();
+    });
   }
 
   async getQuatityMonth() {
+    await this.isLoading(true);
     await new Promise((resolve, reject) => {
       this.dbD
         .getMonth()
@@ -86,9 +95,10 @@ export default class DetailsScreen extends Component {
           .then(res => {
             this.setState({
               arr_id_in_month: [...this.state.arr_id_in_month, [...res]],
-              loading: false,
             });
-            resolve(res);
+            if (index == this.state.Months.length - 1) {
+              resolve();
+            }
           })
           .catch(e => {
             console.log(e);
@@ -102,6 +112,7 @@ export default class DetailsScreen extends Component {
     await this.getavgSpend_aDay();
     await this.getSelectCauseEarn();
     await this.getSelectCauseSpend();
+    await this.isLoading(false);
   }
 
   getSelectCauseEarn() {
@@ -118,6 +129,7 @@ export default class DetailsScreen extends Component {
         });
     });
   }
+
   getSelectCauseSpend() {
     return new Promise((resolve, reject) => {
       this.dbS
@@ -137,11 +149,8 @@ export default class DetailsScreen extends Component {
 
   getSumEarnInMonth() {
     return new Promise((resolve, reject) => {
-      this.setState({loading: true});
       for (let j = 0; j < this.state.arr_id_in_month.length; j++) {
         const element = this.state.arr_id_in_month[j];
-        let arr = 0;
-
         for (let i = 0; i < element.length; i++) {
           const item = element[i].dsid;
           this.dbE
@@ -151,22 +160,20 @@ export default class DetailsScreen extends Component {
                 (previousState, currentProps) => {
                   return {
                     sumEarnMonth: previousState.sumEarnMonth + res[0].sum,
-                    loading: false,
                   };
                 },
                 () => {
                   if (i == element.length - 1) {
-                    this.setState(
-                      (previousState, currentProps) => ({
-                        arrsumEarnMonth: [
-                          ...previousState.arrsumEarnMonth,
-                          this.state.sumEarnMonth,
-                        ],
-                      }),
-                      () => {
-                        resolve(this.state.arrsumEarnMonth);
-                      },
-                    );
+                    this.setState((previousState, currentProps) => ({
+                      arrsumEarnMonth: [
+                        ...previousState.arrsumEarnMonth,
+                        this.state.sumEarnMonth,
+                      ],
+                      sumEarnMonth: 0,
+                    }));
+                  }
+                  if (j == this.state.arr_id_in_month.length - 1) {
+                    resolve(this.state.arrsumEarnMonth);
                   }
                 },
               );
@@ -181,7 +188,6 @@ export default class DetailsScreen extends Component {
 
   getSumSpendInMonth() {
     return new Promise((resolve, reject) => {
-      this.setState({loading: true});
       for (let j = 0; j < this.state.arr_id_in_month.length; j++) {
         const element = this.state.arr_id_in_month[j];
 
@@ -194,28 +200,27 @@ export default class DetailsScreen extends Component {
                 (previousState, currentProps) => {
                   return {
                     sumSpendMonth: previousState.sumSpendMonth + res[0].sum,
-                    loading: false,
                   };
                 },
                 () => {
                   if (i == element.length - 1) {
-                    this.setState(
-                      (previousState, currentProps) => ({
-                        arrsumSpendMonth: [
-                          ...previousState.arrsumSpendMonth,
-                          this.state.sumSpendMonth,
-                        ],
-                      }),
-                      () => {
-                        resolve(this.state.arrsumSpendMonth);
-                      },
-                    );
+                    this.setState((previousState, currentProps) => ({
+                      arrsumSpendMonth: [
+                        ...previousState.arrsumSpendMonth,
+                        this.state.sumSpendMonth,
+                      ],
+                      sumSpendMonth: 0,
+                    }));
+                  }
+                  if (j == this.state.arr_id_in_month.length - 1) {
+                    resolve(this.state.arrsumSpendMonth);
                   }
                 },
               );
             })
             .catch(e => {
               console.log(e);
+              reject(e);
             });
         }
       }
@@ -245,8 +250,8 @@ export default class DetailsScreen extends Component {
         const element = this.state.Months[index];
         let SumMoney = this.state.arrsumSpendMonth[index];
         let dayuse = element.numday;
-
         let avg = parseInt(SumMoney) / parseInt(dayuse);
+
         this.setState({
           arravgSpendMonth: [...this.state.arravgSpendMonth, Math.floor(avg)],
         });
@@ -263,22 +268,73 @@ export default class DetailsScreen extends Component {
           height: '100%',
           backgroundColor: Color.dabutchi,
         }}>
-        {this.state.Months.map((item, index) => {
-          return (
-            <DetailsComponent
-              key={index}
-              item={item}
-              sumE={this.state.arrsumEarnMonth[index]}
-              sumS={this.state.arrsumSpendMonth[index]}
-              arravgEarnMonth={this.state.arravgEarnMonth[index]}
-              arravgSpendMonth={this.state.arravgSpendMonth[index]}
-              arrCauseEarn={this.state.causeTopEarn}
-              arrCauseSpend={this.state.causeTopSpend}
-            />
-          );
-        })}
+        <ScrollView>
+          {this.state.Months.map((item, index) => {
+            return (
+              <DetailsComponent
+                key={index}
+                item={item}
+                sumE={this.state.arrsumEarnMonth[index]}
+                sumS={this.state.arrsumSpendMonth[index]}
+                arravgEarnMonth={this.state.arravgEarnMonth[index]}
+                arravgSpendMonth={this.state.arravgSpendMonth[index]}
+              />
+            );
+          })}
+          <View style={styless.item}>
+            <Text style={styless.textx}>Cause Earn Top: </Text>
+            {this.state.causeTopEarn.map((item, index) => {
+              return (
+                <View key={item.id}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '900',
+                      lineHeight: 32,
+                    }}>
+                    {item.cause} - {Helpers.setMoney(item.money)} $
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <View style={styless.item}>
+            <Text style={styless.textx}>Cause Earn Top: </Text>
+            {this.state.causeTopSpend.map((item, index) => {
+              return (
+                <View key={item.id}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '900',
+                      lineHeight: 32,
+                    }}>
+                    {item.cause} - {Helpers.setMoney(item.money)} $
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <View style={{height: 200}}></View>
+        </ScrollView>
+
         {this.state.loading ? <LoadingComponent /> : null}
       </View>
     );
   }
 }
+
+const styless = StyleSheet.create({
+  container: {
+    borderBottomWidth: 9,
+    margin: 6,
+  },
+  item: {
+    margin: 9,
+    borderRadius: 1,
+  },
+  textx: {
+    fontSize: 14,
+    lineHeight: 15,
+  },
+});

@@ -30,6 +30,7 @@ export default class DashBoardItem extends Component {
       'focus',
       () => {
         this.selectSumMoneySpendPerDay();
+        this.selectSumMoneyEarnPerDay();
       },
     );
   }
@@ -84,7 +85,6 @@ export default class DashBoardItem extends Component {
         onPress={() => {
           this.props.navigation.navigate('DetailsThatDay', {obj: item.dsid});
         }}>
-        {console.log('Cause: ', this.state.causeTop)}
         <View style={ItemStyle.headerItem}>
           <Text style={ItemStyle.textHeader}>
             {Helpers.setMonthStringToNumber(item.timestamp)}
